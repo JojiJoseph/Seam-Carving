@@ -3,7 +3,7 @@
 Run
 
 ```bash
-pytho3 main.py
+python3 main.py
 ```
 
 Then press any key, 'q' for quit
