@@ -4,6 +4,7 @@ from math import inf
 import cv2
 import numpy as np
 import sys
+import time
 
 sys.setrecursionlimit(100000)
 
@@ -24,6 +25,7 @@ cv2.namedWindow('Carved', cv2.WINDOW_NORMAL)
 carved_indices = set()
 
 for it in range((img.shape[1])//2):
+    start_time = time.time()
     height, width, _ = img.shape
 
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)#.astype(float)
@@ -45,12 +47,13 @@ for it in range((img.shape[1])//2):
             return current
         return abs(img_magnitude[i, j])
     def mag_neighbour(i, j):
-        current = abs(img_magnitude[i, j])
-        res = 0
-        for di, dj in product(range(-3, 3), range(-3, 3)):
-            # print(di, dj)
-            res += mag(i + di, j + dj, current)
-        return res
+        return abs(img_magnitude[i, j])
+        # current = abs(img_magnitude[i, j])
+        # res = 0
+        # for di, dj in product(range(-3, 3), range(-3, 3)):
+        #     # print(di, dj)
+        #     res += mag(i + di, j + dj, current)
+        # return res
     
     @lru_cache(maxsize=None)
     def dp(i, j):
@@ -86,9 +89,11 @@ for it in range((img.shape[1])//2):
     for i, j in carved_indices:
         img[i, j:-1] = img[i, j + 1:]
     img = img[:, :-1]
+    print("Time taken for 1 iteration", (time.time() - start_time) * 1000, "ms")
 
     cv2.imshow('Carved', img)
-    key = cv2.waitKey() & 0xFF
-    if key == ord('q'):
-        break
-    
+    # key = cv2.waitKey(1) & 0xFF
+    # if key == ord('q'):
+    #     break
+cv2.imshow('Final', img)
+key = cv2.waitKey()
